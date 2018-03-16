@@ -7,9 +7,10 @@ let brightestPosX = 0;
 let brightestPosY = 0;
 let target = {
     r: 0,
-    g: 200,
-    b: 0
+    g: 0,
+    b: 255
 };
+let border = 100x;
 
 let currentColor;
 
@@ -26,33 +27,38 @@ function setup() {
 }
 
 function draw() {
-    image(frame, 0, 0, w, h);
+    image(frame, 0, 0,  w, h);
     frame.loadPixels();
     let r2 = target.r;
     let g2 = target.g;
     let b2 = target.b;
     if (frame.pixels.length > 0) {
+        let i = 0;
+        let count = 0;
         for (var x = 0; x < frame.width; x++) {
             for (var y = 0; y < frame.height; y++) {
-                let loc = x + y * frame.width;
+                let r1 = frame.pixels[i];
+                let g1 = frame.pixels[i+1];
+                let b1 = frame.pixels[i+2];
 
-                var current = frame.pixels[loc];
-                // let r1 = red(current);
-                // let b1 = blue(current);
-                // let g1 = green(current);
+                let d = distSq(r1, g1, b1, r2, g2, b2);
 
-                //let distance = dist(red(current), r2, green(current), g2, blue(current), b2);
-                //let g1 = green(current);
-                // if (1 > record) {
-                //     record = 1;
-                //     brightestPosX = x;
-                //     brightestPosY = y;
-                // }
-                // fill(255);
-                // strokeWeight(4.0);
-                // stroke(0);
-                // ellipse(brightsestPosX, brightestPosY, 20, 20);
+                //console.log(d);
+                if(d < border*border){
+                  count++;
+                }
+                // console.log(green);
+                // console.log(blue);
+                //let current = frame.pixels[loc];
+                i += 4;
             }
         }
     }
+    frame.updatePixels();
+}
+
+function distSq(x1, y1, z1, x2, y2, z2){
+  let d = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) +(z2-z1)*(z2-z1);
+  return d;
+
 }
