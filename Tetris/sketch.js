@@ -1,9 +1,9 @@
 let gameGrid = [];
 let currentFigure;
 let tickTimer;
-let figures = [];
-let figureIndex = 1;
 let score = 0;
+
+let figuresPreset;
 
 function setup() {
 	createCanvas(320, 640);
@@ -12,14 +12,16 @@ function setup() {
 		layer.fill(null);
 	});
 
-	figures = [];
-	figures.push(new Figure([[1, 1, 1, 1], [0, 0, 0, 0]]));
-	figures.push(new Figure([[1, 1, 1, 0], [0, 0, 0, 0]]));
-	figures.push(new Figure([[1, 1, 1, 0], [0, 0, 0, 0]]));
-	for (let i = 0; i < 2; i++) { 
-		figures.push(new Figure([[0, 0, 1, 0], [1, 1, 1, 0]]));
-	}
-	currentFigure = figures[0];
+	figuresPreset = [
+		[[1, 1, 1, 1], [0, 0, 0, 0]],
+		[[1, 1, 0, 0], [1, 1, 0, 0]],
+		[[1, 1, 1, 0], [0, 1, 0, 0]],
+		[[1, 1, 0, 0], [0, 1, 1, 0]],
+		[[0, 1, 1, 0], [1, 1, 0, 0]],
+		[[1, 0, 0, 0], [1, 1, 1, 0]],
+		[[1, 1, 1, 0], [1, 0, 0, 0]]
+	];	
+	currentFigure = new Figure(random(figuresPreset));
 	tickTimer = new Date();
 }
 
@@ -61,8 +63,7 @@ function draw() {
 	if (currentTime - tickTimer.getTime() > 400) {
 		tickTimer.setTime(currentTime);
 		if (currentFigure.blockDown()) {
-			currentFigure = figures[figureIndex];
-			figureIndex++;
+			currentFigure = new Figure(random(figuresPreset));
 		}
 		currentFigure.down()
 	}
