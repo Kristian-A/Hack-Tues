@@ -9,6 +9,11 @@ let targets = [{r: 255, g: 0, b: 0}, {r: 0, g: 0, b: 255}];
 let border = 100;
 let clickCount = 0;
 
+let maxDifference = 200;
+let rotationThreshhold = 45;
+let zeroingThreshhold = 30  ;
+let rotated = false;
+
 function setup() {
     createCanvas(w, h);
     frame = createCapture({
@@ -35,6 +40,7 @@ function mousePressed(){
 function draw() {
     // translate(width,0);
     // scale(-1.0,1.0);
+    angleMode(DEGREES);
     image(frame, 0, 0,  w, h);
     frame.loadPixels();
 
@@ -74,8 +80,33 @@ function draw() {
                 ellipse(avgX[j], avgY[j], 20, 20);
             }
         }
-
     }
+
+    let deltaX = avgX[0] - avgX[1]
+    let deltaY = avgY[0] - avgY[1];
+    let rotation = "cw";
+    if (deltaY < 0) {
+        deltaY *= -1;
+        rotation = "ccw";
+    }
+    let hypothenuse = sqrt(deltaX*deltaX + deltaY*deltaY);
+    let angle = asin(deltaY/hypothenuse);
+
+
+    if (!rotated) {
+        if (angle > rotationThreshhold) {
+            console.log(rotation)
+            rotated = true;
+        }
+    }
+    else {
+        if (angle < zeroingThreshhold) {
+            console.log("Zeroed");
+            rotated = false;
+        }
+    }
+
+    //console.log(rotation);
     frame.updatePixels();
 }
 
