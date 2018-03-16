@@ -1,3 +1,4 @@
+
 let capture;
 let w = 640;
 let h = 480;
@@ -11,12 +12,12 @@ let target = {
 };
 let border = 50;
 
-
 function setup() {
     createCanvas(w, h);
     frame = createCapture({
       video: null
     });
+    //scale(-1.0,1.0);
     frame.hide();
     frameRate(30);
     //capture.hide();
@@ -29,14 +30,28 @@ function mousePressed(){
     let x = mouseX;
     let y = mouseY;
 
-    let pixel = frame.pixels[x*y*4];
+    console.log("x = " + x);
+    console.log("y = " + y);
+    let pixel = (y*frame.width + x) * 4;
+    //ellipse(x, y, 20, 20)
 
+    // for (var i = 0; i < 400; i+=4) {
+    //     frame.pixels[a+i] = 0;
+    //     frame.pixels[a+1+i] = 0;
+    //     frame.pixels[a+2+i] = 0;
+    // }
+    // frame.updatePixels();
     target.r = frame.pixels[pixel];
     target.g = frame.pixels[pixel+1];
     target.b = frame.pixels[pixel+2];
+    console.log(target.r);
+    console.log(target.g);
+    console.log(target.b);
 }
 
 function draw() {
+    // translate(width,0);
+    // scale(-1.0,1.0);
     image(frame, 0, 0,  w, h);
     frame.loadPixels();
 
