@@ -1,16 +1,13 @@
-
 let capture;
 let w = 640;
 let h = 480;
 
 let brightestPosX = 0;
 let brightestPosY = 0;
-let target = {
-    r: 255,
-    g: 0,
-    b: 0
-};
-let border = 50;
+
+let targets = [{r: 255, g: 0, b: 0}, {r: 0, g: 0, b: 255}];
+let border = 100;
+let clickCount = 0;
 
 function setup() {
     createCanvas(w, h);
@@ -22,31 +19,17 @@ function setup() {
     frameRate(30);
     //capture.hide();
     frame.size(w, h);
-
-    //createCanvas(w, h);
 }
 
 function mousePressed(){
     let x = mouseX;
     let y = mouseY;
-
-    console.log("x = " + x);
-    console.log("y = " + y);
     let pixel = (y*frame.width + x) * 4;
-    //ellipse(x, y, 20, 20)
-
-    // for (var i = 0; i < 400; i+=4) {
-    //     frame.pixels[a+i] = 0;
-    //     frame.pixels[a+1+i] = 0;
-    //     frame.pixels[a+2+i] = 0;
-    // }
-    // frame.updatePixels();
-    target.r = frame.pixels[pixel];
-    target.g = frame.pixels[pixel+1];
-    target.b = frame.pixels[pixel+2];
-    console.log(target.r);
-    console.log(target.g);
-    console.log(target.b);
+    let current = clickCount % 2;
+    targets[current].r = frame.pixels[pixel];
+    targets[current].g = frame.pixels[pixel+1];
+    targets[current].b = frame.pixels[pixel+2];
+    clickCount++;
 }
 
 function draw() {
@@ -55,44 +38,43 @@ function draw() {
     image(frame, 0, 0,  w, h);
     frame.loadPixels();
 
-    let avgX = 0;
-    let avgY = 0;
-    let r2 = target.r;
-    let g2 = target.g;
-    let b2 = target.b;
+    let avgX = [0, 0];
+    let avgY = [0, 0];
+    let rTargets = [targets[0].r, targets[1].r];
+    let gTargets = [targets[0].g, targets[1].g];
+    let bTargets = [targets[0].b, targets[1].b];
     if (frame.pixels.length > 0) {
         let i = 0;
-        let count = 0;
+        let count = [0, 0];
         for (var y = 0; y < frame.height; y++) {
             for (var x = 0; x < frame.width; x++) {
-                let r1 = frame.pixels[i];
-                let g1 = frame.pixels[i+1];
-                let b1 = frame.pixels[i+2];
-                //frame.updatePixels();
+                let rCurrent = frame.pixels[i];
+                let gCurrent = frame.pixels[i+1];
+                let bCurrent = frame.pixels[i+2];
 
-                let d = distSq(r1, g1, b1, r2, g2, b2);
-
-                //console.log(d);
-                if(d < border*border){
-                  avgX += x;
-                  avgY += y;
-                  count++;
+                for (var j = 0; j < targets.length; j++) {
+                    let d = distSq(rCurrent, gCurrent, bCurrent, rTargets[j], gTargets[j], bTargets[j]);
+                    if(d < border*border) {
+                      avgX[j] += x;
+                      avgY[j] += y;
+                      count[j]++;
+                    }
                 }
-                // console.log(green);
-                // console.log(blue);
-                //let current = frame.pixels[loc];
                 i += 4;
             }
         }
+        for (var j = 0; j < targets.length; j++) {
+            if(count[j] > 0) {
 
-        if(count > 0) {
-            avgX = avgX / count;
-            avgY = avgY / count;
-            fill(255);
-            strokeWeight(4.0);
-            stroke(0);
-            ellipse(avgX, avgY, 20, 20);
+                avgX[j] = avgX[j] / count[j];
+                avgY[j] = avgY[j] / count[j];
+                fill(targets[j].r, targets[j].g, targets[j].b);
+                strokeWeight(4.0);
+                stroke(0);
+                ellipse(avgX[j], avgY[j], 20, 20);
+            }
         }
+
     }
     frame.updatePixels();
 }
