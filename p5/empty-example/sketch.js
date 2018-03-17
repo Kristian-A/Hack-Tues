@@ -139,7 +139,7 @@ function draw() {
     fill(255);
     ellipse(avgPoint.x, avgPoint.y, 10, 10);
 
-    let column = ceil(avgPoint.x / (w/10));
+    let column = ceil(avgPoint.x / (w/10) + 1);
     currentFigure.move(column, currentFigure.y);
     //console.log(column);
     //console.log(column);
