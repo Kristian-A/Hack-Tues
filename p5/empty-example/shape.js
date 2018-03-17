@@ -170,12 +170,11 @@ class Figure {
 	}
 
 	rotate(amount) {
-    push();
-    angleMode(RADIANS);
+	    push();
+	    angleMode(RADIANS);
 		let positions = [];
 
 		for (let i = 0; i < this.blocks.length; i++) {
-      console.log("afds");
 			let current = this.blocks[i];
 
 			let xDist = abs(current.xOff);// - this.middleBlock.xOff);
@@ -185,7 +184,9 @@ class Figure {
 			let angle = atan2(current.yOff, current.xOff) + HALF_PI*amount;
 			let newX = round(cos(angle)*dist);
 			let newY = round(sin(angle)*dist);
-			if (newX + current.x > 9 || newX + current.x < 0 ||	newY + current.y <= 0 || (gameGrid[newY + current.y][newX + current.x] != null && !current.figure.blockInFigure(newX + current.x, newY + current.y))) {
+			if (newX + current.x > 9 || newX + current.x < 0 ||	newY + current.y <= 0 ||
+				(gameGrid[newY + current.y][newX + current.x] != null &&
+					!current.figure.blockInFigure(newX + current.x, newY + current.y))) {
 
 				return;
 			}
@@ -200,7 +201,7 @@ class Figure {
 		this.edges();
 		this.move(this.x, this.y);
 
-    pop();
+    	pop();
 	}
 
 	move(x, y) {
