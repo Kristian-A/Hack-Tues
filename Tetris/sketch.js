@@ -13,13 +13,13 @@ function setup() {
 	});
 
 	figuresPreset = [
-		[[1, 1, 1, 1], [0, 0, 0, 0]],
-		[[1, 1, 0, 0], [1, 1, 0, 0]],
-		[[1, 1, 1, 0], [0, 1, 0, 0]],
-		[[1, 1, 0, 0], [0, 1, 1, 0]],
-		[[0, 1, 1, 0], [1, 1, 0, 0]],
-		[[1, 0, 0, 0], [1, 1, 1, 0]],
-		[[1, 1, 1, 0], [1, 0, 0, 0]]
+		// [[2, 1, 1, 1], [0, 0, 0, 0]],
+		// [[2, 1, 0, 0], [1, 1, 0, 0]],
+		// [[2, 1, 1, 0], [0, 1, 0, 0]],
+		[[2, 1, 0, 0], [0, 1, 1, 0]],
+		[[0, 1, 1, 0], [1, 2, 0, 0]],
+		// [[2, 0, 0, 0], [1, 1, 1, 0]],
+		// [[2, 1, 1, 0], [1, 0, 0, 0]]
 	];	
 	currentFigure = new Figure(random(figuresPreset));
 	tickTimer = new Date();
@@ -33,8 +33,7 @@ function shiftDown(lowest) {
 			}
 		}); 
 	}
-	score+=100;
-	console.log(score); 
+	score += 100;
 }
 
 function checkLayers() {
@@ -64,6 +63,7 @@ function draw() {
 		tickTimer.setTime(currentTime);
 		if (currentFigure.blockDown()) {
 			currentFigure = new Figure(random(figuresPreset));
+			checkLayers();
 		}
 		currentFigure.down()
 	}
@@ -74,7 +74,6 @@ function draw() {
 			}
 		})
 	});
-	checkLayers();
 }
 
 function keyTyped() {
@@ -84,6 +83,10 @@ function keyTyped() {
 		currentFigure.left();
 	} else if (key == "s") {
 		currentFigure.down();
+	} else if (key == "q") {
+		currentFigure.rotate(1);
+	} else if (key == "e") {
+		currentFigure.rotate(-1);
 	}
 
 	return false;

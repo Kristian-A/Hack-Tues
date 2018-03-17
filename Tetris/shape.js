@@ -11,11 +11,12 @@ function multArr(y, x) {
 
 class Block {
 
-	constructor(xOff, yOff) {
+	constructor(xOff, yOff, fig) {
 		this.xOff = xOff;
 		this.yOff = yOff;
 		this.x = xOff;
 		this.y = yOff;
+		this.figure = fig;
 	}
 
 	move(x, y, param = false) {
@@ -42,23 +43,36 @@ class Figure {
 
 	constructor(arr) {
 		this.blocks = [];
-		this.rightX = 0;
-		this.leftX = 4;
 		for (let y = 0; y < 2; y++) {
 			for (let x = 0; x < 4; x++) {
 				if (arr[y][x]) {
-					this.blocks.push(new Block(x, y));
-					if (this.rightX < x) {
-						this.rightX = x;
-					}
-					if (this.leftX > x) {
-						this.leftX = x;
+					if (arr[y][x] == 2) {
+						this.middleBlock = new Block(x, y);
+						this.blocks.push(new Block(x, y, this));
+					} else {
+						this.blocks.push(new Block(x, y, this));
 					}
 				}
 			}
 		}	
+		this.edges();
 		this.x = 5;
 		this.y = 0;
+	}
+
+	edges() {
+
+		this.rightX = 0;
+		this.leftX = 4;
+		
+		this.blocks.forEach(block => {
+			if (this.rightX < block.xOff) {
+				this.rightX = block.xOff;
+			}
+			if (this.leftX > block.xOff) {
+				this.leftX = block.xOff;
+			}
+		})
 	}
 
 	right() {
@@ -82,7 +96,7 @@ class Figure {
 	blockRight() {
 		for (let i = 0; i < this.blocks.length; i++) {
 			let current = this.blocks[i];
-			if (this.x == 9 - this.rightX || gameGrid[current.y][current.x+1] != null) {
+			if (this.x == 9 - abs(this.rightX) || gameGrid[current.y][current.x+1] != null) {
 				if (!this.blockInFigure(current.x+1, current.y)) {
 					return true;
 				}
@@ -94,7 +108,7 @@ class Figure {
 	blockLeft() {
 		for (let i = 0; i < this.blocks.length; i++) {
 			let current = this.blocks[i];
-			if (this.x == this.leftX || gameGrid[current.y][current.x-1] != null) {
+			if (this.x <= abs(this.leftX) || gameGrid[current.y][current.x-1] != null) {
 				if (!this.blockInFigure(current.x-1, current.y)) {
 					return true;
 				}
@@ -124,6 +138,34 @@ class Figure {
 		return false;
 	}
 
+	rotate(amount) {
+		let positions = [];
+
+		for (let i = 0; i < this.blocks.length; i++) {
+			let current = this.blocks[i];
+			let xDist = abs(current.xOff);// - this.middleBlock.xOff);
+			let yDist = abs(current.yOff);// - this.middleBlock.yOff);
+			let dist = sqrt(xDist*xDist + yDist*yDist);
+			// let angle = atan2(this.middleBlock.yOff - current.yOff, this.middleBlock.xOff - current.xOff) + HALF_PI*amount;
+			let angle = atan2(current.yOff, current.xOff) + HALF_PI*amount;
+			let newX = round(cos(angle)*dist);
+			let newY = round(sin(angle)*dist);
+			if (newX + current.x > 9 || newX + current.x < 0 ||
+				newY + current.y <= 0 ||
+			   (gameGrid[newY + current.y][newX + current.x] != null && !current.figure.blockInFigure(newX + current.x, newY + current.y))) {
+				return;
+			}
+			positions.push([newX, newY]);
+		}
+		for (let i = 0; i < this.blocks.length; i++) {
+			this.blocks[i].xOff = positions[i][0];
+			this.blocks[i].yOff = positions[i][1];
+		}
+
+		this.edges();
+		this.move(this.x, this.y);
+	}
+
 	move(x, y) {
 		this.blocks.forEach(block => {
 			block.move(x, y);
@@ -133,7 +175,6 @@ class Figure {
 		});
 		this.x = x;
 		this.y = y;
-
 	}
 
 	draw() { 
