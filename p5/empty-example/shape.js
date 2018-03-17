@@ -143,7 +143,9 @@ class Figure {
 		let positions = [];
 
 		for (let i = 0; i < this.blocks.length; i++) {
+
 			let current = this.blocks[i];
+
 			let xDist = abs(current.xOff);// - this.middleBlock.xOff);
 			let yDist = abs(current.yOff);// - this.middleBlock.yOff);
 			let dist = sqrt(xDist*xDist + yDist*yDist);
@@ -154,6 +156,7 @@ class Figure {
 			if (newX + current.x > 9 || newX + current.x < 0 ||
 				newY + current.y <= 0 ||
 			   (gameGrid[newY + current.y][newX + current.x] != null && !current.figure.blockInFigure(newX + current.x, newY + current.y))) {
+
 				return;
 			}
 			positions.push([newX, newY]);
@@ -161,6 +164,7 @@ class Figure {
 		for (let i = 0; i < this.blocks.length; i++) {
 			this.blocks[i].xOff = positions[i][0];
 			this.blocks[i].yOff = positions[i][1];
+
 		}
 
 		this.edges();

@@ -23,11 +23,11 @@ class Block {
 		gameGrid[this.y][this.x] = null;
 		if (param) {
 			this.x = x;
-			this.y = y;	
+			this.y = y;
 			gameGrid[y][x] = this;
 		} else {
 			this.x = (x + this.xOff);
-			this.y = (y + this.yOff);	
+			this.y = (y + this.yOff);
 		}
 	}
 
@@ -54,7 +54,7 @@ class Figure {
 					}
 				}
 			}
-		}	
+		}
 		this.edges();
 		this.x = 5;
 		this.y = 0;
@@ -64,7 +64,7 @@ class Figure {
 
 		this.rightX = 0;
 		this.leftX = 4;
-		
+
 		this.blocks.forEach(block => {
 			if (this.rightX < block.xOff) {
 				this.rightX = block.xOff;
@@ -130,7 +130,7 @@ class Figure {
 	}
 
 	blockInFigure(x, y) {
-		for (var i = 0; i < this.blocks.length; i++) {	
+		for (var i = 0; i < this.blocks.length; i++) {
 			if (this.blocks[i].x == x && this.blocks[i].y == y) {
 				return true;
 			}
@@ -139,6 +139,7 @@ class Figure {
 	}
 
 	rotate(amount) {
+		console.log("afds");
 		let positions = [];
 
 		for (let i = 0; i < this.blocks.length; i++) {
@@ -177,7 +178,7 @@ class Figure {
 		this.y = y;
 	}
 
-	draw() { 
+	draw() {
 		this.blocks.forEach(block => {
 			block.draw();
 		});
