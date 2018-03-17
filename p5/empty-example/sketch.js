@@ -5,8 +5,9 @@ let h = 480;
 let brightestPosX = 0;
 let brightestPosY = 0;
 
+
 let targets = [{r: 255, g: 0, b: 0}, {r: 0, g: 0, b: 255}];
-let border = 100;
+let border = 75;
 let clickCount = 0;
 
 let maxDifference = 200;
@@ -15,7 +16,7 @@ let zeroingThreshhold = 30  ;
 let rotated = false;
 
 let dropTrigger = 0.70 * h;
-let dropReset = 0.40 * h;
+let dropReset = 0.50 * h;
 let dropped = false;
 
 function setup() {
@@ -25,7 +26,7 @@ function setup() {
     });
     //scale(-1.0,1.0);
     frame.hide();
-    frameRate(30);
+    // frameRate(30);
     //capture.hide();
     frame.size(w, h);
 }
@@ -47,7 +48,6 @@ function draw() {
     angleMode(DEGREES);
     image(frame, 0, 0,  w, h);
     frame.loadPixels();
-
     let avgX = [0, 0];
     let avgY = [0, 0];
     let rTargets = [targets[0].r, targets[1].r];
@@ -79,14 +79,29 @@ function draw() {
                 avgX[j] = avgX[j] / count[j];
                 avgY[j] = avgY[j] / count[j];
                 fill(targets[j].r, targets[j].g, targets[j].b);
-                strokeWeight(4.0);
+                //strokeWeight(4.0);
                 stroke(0);
-                ellipse(avgX[j], avgY[j], 20, 20);
+                ellipse(avgX[j], avgY[j], 10, 10);
             }
         }
-    }
 
-    let deltaX = avgX[0] - avgX[1]
+    }
+    let avgPoint = {
+        x: (avgX[0] + avgX[1]) / 2,
+        y: (avgY[0] + avgY[1]) / 2
+    };
+
+    fill(255);
+    ellipse(avgPoint.x, avgPoint.y, 10, 10);
+
+    let column = ceil(avgPoint.x / (width/10));
+    //console.log(column);
+
+    fill(255, 100);
+    noStroke();
+    rect((column-1)*(width/10), 0, width/10, height);
+
+    let deltaX = avgX[0] - avgX[1];
     let deltaY = avgY[0] - avgY[1];
     let rotation = "cw";
     if (deltaY < 0) {
@@ -99,7 +114,7 @@ function draw() {
 
     if (!rotated) {
         if (angle > rotationThreshhold) {
-            console.log(rotation)
+            console.log(rotation);
             rotated = true;
         }
     }
@@ -115,16 +130,13 @@ function draw() {
         }
     }
 
-    let avgPoint = {
-        x: (avgX[0] + avgX[1]) / 2,
-        y: (avgY[0] + avgY[1]) / 2
-    };
-
+    stroke(255,100);
     if (!dropped) {
         if (avgPoint.y > dropTrigger) {
             console.log("Trigger");
             dropped = true;
         }
+        line(0, dropTrigger, width, dropTrigger);
     }
 
     else {
@@ -132,12 +144,17 @@ function draw() {
             console.log("Reset");
             dropped = false;
         }
+        line(0, dropReset, width, dropReset);
+    }
+    for (var i = 0; i < 10; i++) {
+        stroke(255, 100);
+        line((width/10)*i ,0 , (width/10)*i, height);
     }
 
     frame.updatePixels();
 }
 
-function distSq(x1, y1, z1, x2, y2, z2){
+function distSq(x1, y1, z1, x2, y2, z2) {
   let d = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) +(z2-z1)*(z2-z1);
   return d;
 
