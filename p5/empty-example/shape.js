@@ -65,7 +65,11 @@ class Block {
 	draw() {
 		stroke(0);
 		fill(255, 0, 0);
-		image(images[this.index], this.x*blockSize, this.y*blockSize, blockSize, blockSize);
+		let randImg = images[this.index];
+		for (var i = 0; i < 4; i++) {
+			image(randImg, this.x*blockSize, this.y*blockSize, blockSize, blockSize);
+		}
+
 	}
 
 }

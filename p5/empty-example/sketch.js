@@ -10,8 +10,8 @@ let border = 75;
 let clickCount = 0;
 
 let maxDifference = 200;
-let rotationThreshhold = 45;
-let zeroingThreshhold = 30  ;
+let rotationThreshhold = 35;
+let zeroingThreshhold = 25  ;
 let rotated = false;
 
 let dropTrigger = 0.70 * (h-180);
@@ -24,6 +24,8 @@ let tickTimer;
 let score = 0;
 let pressedS = false;
 let gameOver = false;
+let ableLeft = true;
+let ableRight = true;
 
 let images = [];
 
@@ -82,7 +84,7 @@ function draw() {
     background(51);
     let pic = images[floor(random()*7)];
 	let currentTime = new Date().getTime()
-	if (currentTime - tickTimer.getTime() > 400) {
+	if (currentTime - tickTimer.getTime() > 800) {
 		tickTimer.setTime(currentTime);
 		if (currentFigure.blockDown()) {
             if(gameOver){
@@ -171,7 +173,33 @@ function draw() {
     ellipse(avgPoint.x, avgPoint.y, 10, 10);
 
     let column = ceil(avgPoint.x / (w/10));
-    currentFigure.move(column, currentFigure.y);
+    //console.log(column);
+    ///console.log(currentFigure.y);
+    if((column-1) - currentFigure.x > 0){
+      if(ableRight){
+        currentFigure.move(column-1, currentFigure.y);
+      }
+    }
+
+    else if((column-1) - currentFigure.x < 0){
+      if(ableLeft){
+        currentFigure.move (column-1, currentFigure.y);
+      }
+    }
+    //currentFigure.move(column-1, currentFigure.y);
+    if(currentFigure.blockLeft()){
+      ableLeft = false;
+    }
+    else if (currentFigure.blockRight()) {
+      ableRight = false;
+      ableLeft = true;
+    }
+    else{
+      ableRight = true;
+      ableLeft = true;
+    }
+
+
     //console.log(column);
     //console.log(column);
 
@@ -217,6 +245,7 @@ function draw() {
         if (avgPoint.y > dropTrigger) {
             console.log("Trigger");
             dropped = true;
+            pressedS = true;
             currentFigure.move(currentFigure.x, currentFigure.y+1);
         }
         line(0, dropTrigger, width, dropTrigger);
