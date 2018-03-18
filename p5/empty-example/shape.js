@@ -1,6 +1,5 @@
 let blockSize =32;
 
-
 function shiftDown(lowest) {
 	for (let i = lowest; i >= 0; i--) {
 		gameGrid[i].forEach(block => {
@@ -48,6 +47,7 @@ class Block {
 		this.x = xOff;
 		this.y = yOff;
 		this.figure = fig;
+		this.index = floor(random()*7);
 	}
 
 	move(x, y, param = false) {
@@ -65,7 +65,7 @@ class Block {
 	draw() {
 		stroke(0);
 		fill(255, 0, 0);
-		rect(this.x*blockSize, this.y*blockSize, blockSize, blockSize);
+		image(images[this.index], this.x*blockSize, this.y*blockSize, blockSize, blockSize);
 	}
 
 }
@@ -170,11 +170,12 @@ class Figure {
 	}
 
 	rotate(amount) {
-	    push();
-	    angleMode(RADIANS);
+    push();
+    angleMode(RADIANS);
 		let positions = [];
 
 		for (let i = 0; i < this.blocks.length; i++) {
+      	console.log("afds");
 			let current = this.blocks[i];
 
 			let xDist = abs(current.xOff);// - this.middleBlock.xOff);
@@ -184,9 +185,7 @@ class Figure {
 			let angle = atan2(current.yOff, current.xOff) + HALF_PI*amount;
 			let newX = round(cos(angle)*dist);
 			let newY = round(sin(angle)*dist);
-			if (newX + current.x > 9 || newX + current.x < 0 ||	newY + current.y <= 0 ||
-				(gameGrid[newY + current.y][newX + current.x] != null &&
-					!current.figure.blockInFigure(newX + current.x, newY + current.y))) {
+			if (newX + current.x > 9 || newX + current.x < 0 ||	newY + current.y <= 0 || (gameGrid[newY + current.y][newX + current.x] != null && !current.figure.blockInFigure(newX + current.x, newY + current.y))) {
 
 				return;
 			}
@@ -201,7 +200,7 @@ class Figure {
 		this.edges();
 		this.move(this.x, this.y);
 
-    	pop();
+    pop();
 	}
 
 	move(x, y) {
