@@ -41,13 +41,13 @@ function multArr(y, x) {
 
 class Block {
 
-	constructor(xOff, yOff, fig) {
+	constructor(xOff, yOff, fig, img) {
 		this.xOff = xOff;
 		this.yOff = yOff;
 		this.x = xOff;
 		this.y = yOff;
 		this.figure = fig;
-		this.index = floor(random()*7);
+		this.index = img
 	}
 
 	move(x, y, param = false) {
@@ -65,10 +65,8 @@ class Block {
 	draw() {
 		stroke(0);
 		fill(255, 0, 0);
-		let randImg = images[this.index];
-		for (var i = 0; i < 4; i++) {
-			image(randImg, this.x*blockSize, this.y*blockSize, blockSize, blockSize);
-		}
+		image(this.index, this.x*blockSize, this.y*blockSize, blockSize, blockSize);
+
 
 	}
 
@@ -78,14 +76,15 @@ class Figure {
 
 	constructor(arr) {
 		this.blocks = [];
+		this.index = floor(random()*7);
 		for (let y = 0; y < 2; y++) {
 			for (let x = 0; x < 4; x++) {
 				if (arr[y][x]) {
 					if (arr[y][x] == 2) {
 						this.middleBlock = new Block(x, y);
-						this.blocks.push(new Block(x, y, this));
+						this.blocks.push(new Block(x, y, this, images[this.index]));
 					} else {
-						this.blocks.push(new Block(x, y, this));
+						this.blocks.push(new Block(x, y, this, images[this.index]));
 					}
 				}
 			}
