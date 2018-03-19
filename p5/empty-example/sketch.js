@@ -6,7 +6,7 @@ let brightestPosX = 0;
 let brightestPosY = 0;
 
 let targets = [{r: 255, g: 0, b: 0}, {r: 0, g: 0, b: 255}];
-let border = 75;
+let border = 50;
 let clickCount = 0;
 
 let maxDifference = 200;
@@ -41,6 +41,7 @@ function setup() {
     }
     background(0);
     frame = createCapture(VIDEO);
+
     //scale(-1.0,1.0);
     frame.hide();
     // frameRate(30);
@@ -176,13 +177,13 @@ function draw() {
     //console.log(column);
     ///console.log(currentFigure.y);
     if((column-1) - currentFigure.x > 0){
-      if(ableRight){
+      if(ableRight && !pressedS && !currentFigure.blockDown()){
         currentFigure.move(column-1, currentFigure.y);
       }
     }
 
     else if((column-1) - currentFigure.x < 0){
-      if(ableLeft){
+      if(ableLeft && !pressedS && !currentFigure.blockDown()){
         currentFigure.move (column-1, currentFigure.y);
       }
     }
@@ -216,28 +217,29 @@ function draw() {
     }
     let hypothenuse = sqrt(deltaX*deltaX + deltaY*deltaY);
     let angle = asin(deltaY/hypothenuse);
-
-    if (!rotated) {
-        if (angle > rotationThreshhold) {
-            console.log(rotation);
-            if (rotation == "cw") {
-                currentFigure.rotate(1);
-            } else {
-                currentFigure.rotate(-1);
-            }
-            rotated = true;
-        }
-    }
-    else {
-        if (angle < zeroingThreshhold) {
-            console.log("Zeroed");
-            if(deltaX < 0) {
-                let temp = targets[0];
-                targets[0] = targets[1];
-                targets[1] = temp;
-            }
-            rotated = false;
-        }
+    if(!pressedS && !currentFigure.blockDown()){
+      if (!rotated) {
+          if (angle > rotationThreshhold) {
+              console.log(rotation);
+              if (rotation == "cw") {
+                  currentFigure.rotate(1);
+              } else {
+                  currentFigure.rotate(-1);
+              }
+              rotated = true;
+          }
+      }
+      else {
+          if (angle < zeroingThreshhold) {
+              console.log("Zeroed");
+              if(deltaX < 0) {
+                  let temp = targets[0];
+                  targets[0] = targets[1];
+                  targets[1] = temp;
+              }
+              rotated = false;
+          }
+      }
     }
 
     stroke(255,100);

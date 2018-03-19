@@ -110,13 +110,13 @@ class Figure {
 	}
 
 	right() {
-		if (!this.blockRight()) {
+		if (!this.blockRight() && !this.blockDown()) {
 			this.move(this.x+1, this.y);
 		}
 	}
 
 	left() {
-		if (!this.blockLeft()) {
+		if (!this.blockLeft() && !this.blockDown()) {
 			this.move(this.x-1, this.y);
 		}
 	}
