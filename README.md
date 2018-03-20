@@ -1,5 +1,5 @@
 # Hack-Tues
-## Tetris controlled by color tracking
+## Tetris controlled by tracking an object made of two different colors
 
 * Written in js.
 * Powered by p5.js graphics library.
